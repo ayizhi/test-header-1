@@ -117,6 +117,9 @@ protected:
   const yijinjing::data::location_ptr cached_home_location_;
   const yijinjing::data::location_ptr ledger_home_location_;
 
+  volatile bool continual_ = true;
+  volatile bool live_ = false;
+
   uint64_t make_source_dest_hash(uint32_t source_id, uint32_t dest_id) const;
 
   bool check_location_exists(uint32_t source_id, uint32_t dest_id) const;
@@ -157,6 +160,10 @@ protected:
 
   virtual void on_frame() = 0;
 
+  virtual void produce(const rx::subscriber<event_ptr> &sb);
+
+  bool drain(const rx::subscriber<event_ptr> &sb);
+
   static constexpr auto feed_profile_data = [](const event_ptr &event, auto &receiver) {
     boost::hana::for_each(longfist::ProfileDataTypes, [&](auto it) {
       using DataType = typename decltype(+boost::hana::second(it))::type;
@@ -188,12 +195,6 @@ private:
   yijinjing::io_device_ptr io_device_;
   rx::composite_subscription cs_;
   int64_t now_;
-  volatile bool continual_ = true;
-  volatile bool live_ = false;
-
-  void produce(const rx::subscriber<event_ptr> &sb);
-
-  bool drain(const rx::subscriber<event_ptr> &sb);
 
   template <typename T>
   std::enable_if_t<T::reflect> do_require_read_from(yijinjing::journal::writer_ptr &&writer, int64_t trigger_time,

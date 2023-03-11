@@ -61,6 +61,8 @@ public:
     get_writer(dest_id)->write(trigger_time, data);
   }
 
+  std::recursive_mutex &get_app_mutex() { return app_mutex_; }
+
 protected:
   cache::bank state_bank_;
 
@@ -184,6 +186,8 @@ private:
   int64_t trading_day_ = 0;
   int32_t timer_usage_count_ = 0;
   std::unordered_map<int, int64_t> timer_checkpoints_ = {};
+  std::recursive_mutex app_mutex_;
+
   void checkin();
 
   void expect_start();

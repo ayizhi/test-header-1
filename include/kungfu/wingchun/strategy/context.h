@@ -195,6 +195,8 @@ public:
    */
   [[nodiscard]] bool is_positions_mirrored() const;
 
+  [[nodiscard]] bool is_thread_safe() const;
+
   /**
    * Call to hold book.
    */
@@ -204,6 +206,8 @@ public:
    * Call to hold positions, i.e. do not mirror positions.
    */
   void hold_positions();
+
+  void set_thread_safe();
 
   /**
    * request deregister.
@@ -235,6 +239,7 @@ public:
 private:
   bool book_held_ = false;
   bool positions_mirrored_ = true;
+  bool thread_safe_ = false;
 };
 } // namespace kungfu::wingchun::strategy
 

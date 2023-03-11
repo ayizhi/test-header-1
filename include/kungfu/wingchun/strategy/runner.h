@@ -36,6 +36,8 @@ protected:
 
   void on_active() override;
 
+  void produce(const rx::subscriber<event_ptr> &sb) override;
+
   virtual RuntimeContext_ptr make_context();
 
   virtual void pre_start();
